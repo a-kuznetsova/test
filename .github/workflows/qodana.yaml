@@ -1,0 +1,28 @@
+name: Test home
+
+on:
+  push:
+    branches:
+    - main
+  workflow_dispatch:
+
+jobs:
+  code_inspection:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Cache Qodana dependencies
+        uses: actions/cache@v2
+        with:
+          path: /home/runner/work/qodana-cache
+          key: ${{ runner.os }}-qodana-cache-test456-${{ github.ref }}
+          restore-keys: |
+            ${{ runner.os }}-qodana-cache-test456-${{ github.ref }}
+            ${{ runner.os }}-qodana-cache-test456-
+      
+      - name: Run Qodana
+        uses: a-kuznetsova/test@1
+            
+      - name: Change permission
+        run: sudo chmod -R 555 /home/runner/work/qodana-cache
